@@ -71,10 +71,19 @@ const PhotoAnnotator = () => {
           setImage(img);
           const canvas = canvasRef.current;
           const container = canvas.parentElement;
-          const scale = Math.min(container.clientWidth / img.width, 1);
-          setCanvasScale(scale);
+          
+          // Set canvas to actual image dimensions
           canvas.width = img.width;
           canvas.height = img.height;
+          
+          // Calculate scale to fit container
+          const containerWidth = container.clientWidth - 32; // padding
+          const containerHeight = container.clientHeight - 32;
+          const scaleX = containerWidth / img.width;
+          const scaleY = containerHeight / img.height;
+          const scale = Math.min(scaleX, scaleY, 1);
+          
+          setCanvasScale(scale);
           drawCanvas();
         };
         img.src = event.target.result;
@@ -840,9 +849,10 @@ const PhotoAnnotator = () => {
           flex: 1;
           overflow: auto;
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           justify-content: center;
           padding: 1rem;
+          -webkit-overflow-scrolling: touch;
         }
 
         .loupe-overlay {
